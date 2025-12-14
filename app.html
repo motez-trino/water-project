@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Taiba Water Billing</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Cabin+Condensed:700" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="app-header">
+      <div class="brand">
+        <div class="logo">💧</div>
+        <div class="title">Taiba Water Billing</div>
+      </div>
+      <div class="user-area" id="userArea"></div>
+      <div class="waves" aria-hidden="true">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path class="wave w1" d="M0,0 C150,100 350,0 600,100 C850,0 1050,100 1200,0 L1200,120 L0,120 Z"></path>
+          <path class="wave w2" d="M0,0 C200,80 400,0 600,80 C800,0 1000,80 1200,0 L1200,120 L0,120 Z"></path>
+          <path class="wave w3" d="M0,0 C250,60 450,0 600,60 C750,0 950,60 1200,0 L1200,120 L0,120 Z"></path>
+        </svg>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <section id="login-view" class="view">
+        <div class="card xl">
+          <h1>Welcome</h1>
+          <p>Sign in to manage water connections, usage, bills, and requests.</p>
+          <form id="loginForm" class="form-grid" novalidate>
+            <label>Email<input type="email" id="loginEmail" required placeholder="you@example.com" /></label>
+            <label>Password<input type="password" id="loginPassword" required placeholder="••••••••" /></label>
+            <button type="button" id="loginBtn" class="btn primary">Login</button>
+          </form>
+          <div class="muted small">No account? Request access or ask admin.</div>
+        </div>
+      </section>
+
+      <section id="main-view" class="view hidden">
+        <nav class="tabs" id="tabs">
+          <button data-section="dashboard" class="tab active">Dashboard</button>
+          <button data-section="requests" class="tab">Requests</button>
+          <button data-section="households" class="tab">Households</button>
+          <button data-section="billing" class="tab">Billing</button>
+          <button data-section="notifications" class="tab">Notifications</button>
+          <button data-section="admin" class="tab admin-only">Admin</button>
+        </nav>
+
+        <section id="dashboard" class="section">
+          <div class="grid">
+            <div class="stat"><div class="stat-value" id="statHouseholds">0</div><div class="stat-label">Active Households</div></div>
+            <div class="stat"><div class="stat-value" id="statPendingRequests">0</div><div class="stat-label">Pending Requests</div></div>
+            <div class="stat"><div class="stat-value" id="statDueBills">0</div><div class="stat-label">Due Bills</div></div>
+            <div class="stat"><div class="stat-value" id="statLateBills">0</div><div class="stat-label">Late Bills</div></div>
+          </div>
+          <div class="card mt">
+            <h3>High Consumption</h3>
+            <div id="highConsumptionList" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <section id="requests" class="section hidden">
+          <div class="split">
+            <div class="card">
+              <h3>Create Request</h3>
+              <form id="createRequestForm" class="form-grid">
+                <label>Type
+                  <select id="requestType" required>
+                    <option value="new_connection">New water connection</option>
+                    <option value="usage_adjustment">Usage adjustment</option>
+                    <option value="disconnection">Disconnection</option>
+                    <option value="access">Access</option>
+                  </select>
+                </label>
+                <div id="requestFields"></div>
+                <button type="submit" class="btn primary">Submit Request</button>
+              </form>
+            </div>
+            <div class="card">
+              <div class="row-between">
+                <h3>Requests</h3>
+                <div class="row"><button id="clearAllRequestsBtn" class="btn danger admin-only">Clear All</button></div>
+              </div>
+              <div id="requestsList" class="table-wrap"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="households" class="section hidden">
+          <div class="split">
+            <div class="card">
+              <h3>Add Household</h3>
+              <form id="addHouseholdForm" class="form-grid">
+                <label>Owner Email<input type="email" id="hhOwnerEmail" required /></label>
+                <label>Block<input type="text" id="hhBlock" required placeholder="A, B, C..." /></label>
+                <label>Connection Type
+                  <select id="hhConnectionType" required>
+                    <option>Metered</option>
+                    <option>Flat</option>
+                    <option>Shared</option>
+                  </select>
+                </label>
+                <label>Initial Usage (m³)<input type="number" id="hhInitialUsage" min="0" step="0.01" value="0" /></label>
+                <button type="submit" class="btn primary">Create</button>
+              </form>
+            </div>
+            <div class="card">
+              <div class="row-between">
+                <h3>Households</h3>
+                <div class="row">
+                  <label class="chip">Filter Block<input type="text" id="filterBlock" placeholder="e.g. A" /></label>
+                  <label class="chip">Type
+                    <select id="filterType">
+                      <option value="">Any</option>
+                      <option>Metered</option>
+                      <option>Flat</option>
+                      <option>Shared</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div id="householdsList" class="table-wrap"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="billing" class="section hidden">
+          <div class="split">
+            <div class="card">
+              <h3>Generate Monthly Bills</h3>
+              <form id="generateBillsForm" class="form-grid">
+                <label>Month<select id="billMonth" required></select></label>
+                <label>Year<input type="number" id="billYear" required /></label>
+                <label>Price per m³<input type="number" id="pricePerM3" min="0" step="0.01" /></label>
+                <button type="submit" class="btn primary">Generate</button>
+              </form>
+            </div>
+            <div class="card">
+              <div class="row-between"><h3>Bills</h3>
+                <div class="row">
+                  <label class="chip">Status
+                    <select id="filterBillStatus">
+                      <option value="">Any</option>
+                      <option>due</option>
+                      <option>paid</option>
+                      <option>late</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div id="billsList" class="table-wrap"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="notifications" class="section hidden">
+          <div class="card">
+            <h3>Automated Notifications</h3>
+            <div id="notificationsList" class="table-wrap"></div>
+          </div>
+        </section>
+
+        <section id="admin" class="section hidden">
+          <div class="split">
+            <div class="card">
+              <h3>Users</h3>
+              <div id="usersList" class="table-wrap"></div>
+            </div>
+            <div class="card">
+              <h3>Data</h3>
+              <div class="row">
+                <button id="exportBtn" class="btn">Export JSON</button>
+                <button id="importBtn" class="btn">Import JSON</button>
+                <input type="file" id="importFile" accept="application/json" />
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+    <footer class="app-footer">
+      <div>© Taiba Water • Smart Billing & Requests</div>
+      <div class="row"><button id="logoutBtn" class="btn ghost hidden">Logout</button></div>
+    </footer>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
