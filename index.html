@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Taiba • Water Works</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/darkly/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -11,15 +13,19 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div id="splash" class="splash">
-    <h1 class="splash-title">WATER WORKS</h1>
-    <div class="rain" id="rain"></div>
-    <div class="drop-container">
-      <div class="drop"></div>
-      <button id="splashEnter" class="splash-btn"><div class="cup"></div></button>
+  <section class="splash-hero" id="splashHero">
+    <div class="brand">
+      <div class="logo">💧</div>
+      <div class="title">Taiba Water</div>
     </div>
-    <div class="splash-hint">Press the mug to start</div>
-  </div>
+    <h1 class="splash-title animate__animated animate__fadeInDown">Smarter Water Billing</h1>
+    <p class="splash-subtitle animate__animated animate__fadeInUp">Manage connections, usage, bills, and service requests</p>
+    <div class="row" style="margin-top:16px">
+      <a href="home.html" id="enterBtn" class="btn btn-primary animate__animated animate__fadeInUp">Enter</a>
+      <a href="app.html" class="btn btn-outline-light animate__animated animate__fadeInUp">Open App</a>
+      <a href="app.html#login" class="btn btn-outline-light animate__animated animate__fadeInUp">Login</a>
+    </div>
+  </section>
   <script src="splash.js"></script>
 </body>
 </html>
